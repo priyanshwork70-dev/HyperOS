@@ -1,74 +1,71 @@
 import { useState } from "react";
 
 export default function Window({ title, children, onClose, onMinimize, offset = 0 }) {
-  const [windowBox, setWindowBox] = useState({
-    x: 140 + offset * 32,
-    y: 120 + offset * 32,
+  const defaultBox = {
+    x: 140 + offset * 30,
+    y: 100 + offset * 30,
     width: 520,
     height: 360,
-  });
+  };
 
-  const [dragging, setDragging] = useState(false);
-  const [resizing, setResizing] = useState(false);
+  const [windowBox, setWindowBox] = useState(defaultBox);
+  const [isDragging, setIsDragging] = useState(false);
   const [dragGap, setDragGap] = useState({ x: 0, y: 0 });
+  const [isMaximized, setIsMaximized] = useState(false);
 
-  const startDrag = (event) => {
-    if (event.target.tagName === "BUTTON") return;
+  const startDrag = (e) => {
+    if (isMaximized) return;
 
-    setDragging(true);
+    setIsDragging(true);
     setDragGap({
-      x: event.clientX - windowBox.x,
-      y: event.clientY - windowBox.y,
+      x: e.clientX - windowBox.x,
+      y: e.clientY - windowBox.y,
     });
   };
 
-  const moveWindow = (event) => {
-    if (dragging) {
-      setWindowBox((prev) => ({
-        ...prev,
-        x: event.clientX - dragGap.x,
-        y: event.clientY - dragGap.y,
-      }));
-    }
+  const moveWindow = (e) => {
+    if (!isDragging || isMaximized) return;
 
-    if (resizing) {
-      setWindowBox((prev) => ({
-        ...prev,
-        width: Math.max(360, event.clientX - prev.x),
-        height: Math.max(260, event.clientY - prev.y),
-      }));
-    }
+    setWindowBox((prev) => ({
+      ...prev,
+      x: e.clientX - dragGap.x,
+      y: e.clientY - dragGap.y,
+    }));
   };
 
-  const stopActions = () => {
-    setDragging(false);
-    setResizing(false);
+  const stopDrag = () => setIsDragging(false);
+
+  const toggleMaximize = () => {
+    if (isMaximized) {
+      setWindowBox(defaultBox);
+    } else {
+      setWindowBox({
+        x: 10,
+        y: 60,
+        width: window.innerWidth - 20,
+        height: window.innerHeight - 120,
+      });
+    }
+    setIsMaximized(!isMaximized);
   };
 
   const snapLeft = () => {
+    setIsMaximized(false);
     setWindowBox({
-      x: 20,
-      y: 80,
-      width: window.innerWidth / 2 - 35,
-      height: window.innerHeight - 160,
+      x: 10,
+      y: 60,
+      width: window.innerWidth / 2 - 15,
+      height: window.innerHeight - 120,
     });
   };
 
   const snapRight = () => {
+    setIsMaximized(false);
     setWindowBox({
-      x: window.innerWidth / 2 + 10,
-      y: 80,
-      width: window.innerWidth / 2 - 35,
-      height: window.innerHeight - 160,
-    });
-  };
-
-  const maximizeWindow = () => {
-    setWindowBox({
-      x: 20,
-      y: 70,
-      width: window.innerWidth - 40,
-      height: window.innerHeight - 145,
+      x: window.innerWidth / 2 + 5,
+      y: 60,
+      width: window.innerWidth / 2 - 15,
+      height: window.innerHeight - 120,
     });
   };
 
@@ -82,27 +79,22 @@ export default function Window({ title, children, onClose, onMinimize, offset = 
         height: windowBox.height,
       }}
       onMouseMove={moveWindow}
-      onMouseUp={stopActions}
-      onMouseLeave={stopActions}
+      onMouseUp={stopDrag}
+      onMouseLeave={stopDrag}
     >
       <div className="window-titlebar" onMouseDown={startDrag}>
         <span>{title}</span>
 
         <div className="window-controls">
-          <button title="Left Split" onClick={snapLeft}>◧</button>
-          <button title="Right Split" onClick={snapRight}>◨</button>
-          <button title="Maximize" onClick={maximizeWindow}>□</button>
+          <button onClick={snapLeft}>◧</button>
+          <button onClick={snapRight}>◨</button>
+          <button onClick={toggleMaximize}>□</button>
           <button className="window-minimize" onClick={onMinimize}>—</button>
           <button className="window-close" onClick={onClose}>×</button>
         </div>
       </div>
 
       <div className="window-content">{children}</div>
-
-      <div
-        className="resize-handle"
-        onMouseDown={() => setResizing(true)}
-      />
     </section>
   );
 }

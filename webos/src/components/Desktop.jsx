@@ -4,6 +4,7 @@ import StartMenu from "./StartMenu";
 import Taskbar from "./Taskbar";
 import Window from "./Window";
 import FileManagerApp from "../apps/FileManagerApp";
+import CalculatorApp from "../apps/CalculatorApp";
 
 export default function Desktop({ userName, onLogout }) {
   const [activeMode, setActiveMode] = useState("student");
@@ -57,7 +58,8 @@ export default function Desktop({ userName, onLogout }) {
 
   const renderAppContent = (appId) => {
     if (appId === "files") return <FileManagerApp />;
-    
+    if (appId === "calculator") return <CalculatorApp />;
+
     return (
       <div className="coming-soon-app">
         <h2>{hyperApps.find((app) => app.id === appId)?.title}</h2>
