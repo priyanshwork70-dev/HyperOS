@@ -1,13 +1,22 @@
 export default function BootScreen() {
   return (
-    <div className="boot-screen">
-      <div className="boot-card">
+    <main className="boot-screen">
+      <section className="boot-panel">
+        <div className="brand-mark">H</div>
+
         <h1>HyperOS</h1>
-        <p>Starting browser operating system...</p>
-        <div className="loader">
-          <div></div>
+        <p>Preparing adaptive desktop environment...</p>
+
+        <div className="boot-loader">
+          <span></span>
         </div>
-      </div>
-    </div>
+
+        <div className="boot-lines">
+          <p>Loading shell interface</p>
+          <p>Checking local workspace</p>
+          <p>Starting mode engine</p>
+        </div>
+      </section>
+    </main>
   );
 }
