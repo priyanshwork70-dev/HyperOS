@@ -1,36 +1,61 @@
 import { useState } from "react";
-import { apps } from "../data/apps";
+import { modeInfo } from "../data/apps";
 
-export default function StartMenu({ openApp }) {
-  const [search, setSearch] = useState("");
+export default function StartMenu({
+  userName,
+  activeMode,
+  apps,
+  onOpenApp,
+  onSwitchMode,
+  onLogout,
+}) {
+  const [searchText, setSearchText] = useState("");
 
-  const filteredApps = apps.filter((app) =>
-    app.name.toLowerCase().includes(search.toLowerCase())
+  const searchedApps = apps.filter((app) =>
+    app.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
-    <div className="start-menu">
-      <h3>NexOS Start</h3>
+    <section className="start-menu">
+      <div className="start-profile">
+        <div className="start-avatar">{userName.charAt(0).toUpperCase()}</div>
+
+        <div>
+          <h3>{userName}</h3>
+          <p>{modeInfo[activeMode].label} workspace</p>
+        </div>
+      </div>
 
       <input
-        className="start-search"
+        value={searchText}
         placeholder="Search apps..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => setSearchText(e.target.value)}
       />
 
-      <div className="start-apps">
-        {filteredApps.map((app) => (
+      <div className="start-mode-row">
+        {Object.entries(modeInfo).map(([modeKey, mode]) => (
           <button
-            key={app.id}
-            className="start-app-item"
-            onClick={() => openApp(app.id)}
+            key={modeKey}
+            className={activeMode === modeKey ? "active-start-mode" : ""}
+            onClick={() => onSwitchMode(modeKey)}
           >
-            <img src={app.icon} alt={app.name} />
-            <span>{app.name}</span>
+            {mode.emoji}
           </button>
         ))}
       </div>
-    </div>
+
+      <div className="start-app-list">
+        {searchedApps.map((app) => (
+          <button key={app.id} onClick={() => onOpenApp(app.id)}>
+            <img src={app.icon} alt={app.title} />
+            <span>{app.title}</span>
+          </button>
+        ))}
+      </div>
+
+      <button className="logout-btn" onClick={onLogout}>
+        Logout
+      </button>
+    </section>
   );
 }

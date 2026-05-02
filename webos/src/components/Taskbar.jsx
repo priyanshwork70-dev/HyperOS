@@ -1,39 +1,45 @@
-import { apps } from "../data/apps";
+import { hyperApps, modeInfo } from "../data/apps";
 
 export default function Taskbar({
+  activeMode,
+  openWindowIds,
+  minimizedWindowIds,
   onStartClick,
-  openApps,
-  minimizedApps,
   onAppClick,
 }) {
-  const time = new Date().toLocaleTimeString();
+  const currentTime = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
-    <div className="taskbar">
-      <button className="start-btn" onClick={onStartClick}>
+    <footer className="taskbar">
+      <button className="taskbar-start" onClick={onStartClick}>
+        <span>{modeInfo[activeMode].emoji}</span>
         Start
       </button>
 
-      <div className="taskbar-apps">
-        {openApps.map((id) => {
-          const app = apps.find((a) => a.id === id);
+      <div className="taskbar-running-apps">
+        {openWindowIds.map((appId) => {
+          const app = hyperApps.find((item) => item.id === appId);
 
           return (
-            <div
-              key={id}
-              className={`taskbar-item ${
-                minimizedApps.includes(id) ? "minimized" : ""
-              }`}
-              onClick={() => onAppClick(id)}
-              title={app?.name}
+            <button
+              key={appId}
+              className={minimizedWindowIds.includes(appId) ? "task-minimized" : ""}
+              onClick={() => onAppClick(appId)}
+              title={app?.title}
             >
-              <img src={app.icon} alt={app.name} />
-            </div>
+              <img src={app?.icon} alt={app?.title} />
+            </button>
           );
         })}
       </div>
 
-      <span className="clock">{time}</span>
-    </div>
+      <div className="taskbar-status">
+        <span>{modeInfo[activeMode].label}</span>
+        <strong>{currentTime}</strong>
+      </div>
+    </footer>
   );
 }
