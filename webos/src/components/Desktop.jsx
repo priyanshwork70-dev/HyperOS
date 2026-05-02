@@ -57,6 +57,7 @@ export default function Desktop({ userName, onLogout }) {
 
   const renderAppContent = (appId) => {
     if (appId === "files") return <FileManagerApp />;
+    
     return (
       <div className="coming-soon-app">
         <h2>{hyperApps.find((app) => app.id === appId)?.title}</h2>

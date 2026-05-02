@@ -1,118 +1,205 @@
 import { useState } from "react";
 
-const folders = [
+const firstFolders = [
   {
     id: "documents",
     name: "Documents",
     files: [
-      {
-        name: "project-plan.txt",
-        type: "Text File",
-        content:
-          "HyperOS Project Plan\n\n1. Build adaptive modes\n2. Add useful apps\n3. Polish UI\n4. Deploy live demo",
-      },
-      {
-        name: "class-notes.txt",
-        type: "Text File",
-        content:
-          "Today's notes:\n- React components\n- useState for UI state\n- localStorage for saving data",
-      },
+      { id: "f1", name: "project-plan.txt", type: "text", content: "HyperOS project plan" },
+      { id: "f2", name: "study-notes.txt", type: "text", content: "React notes" },
     ],
   },
   {
     id: "projects",
     name: "Projects",
     files: [
-      {
-        name: "hyperos-readme.txt",
-        type: "Text File",
-        content:
-          "HyperOS is a browser-based operating system with adaptive user modes.",
-      },
-      {
-        name: "demo-script.txt",
-        type: "Text File",
-        content:
-          "Demo flow:\nBoot screen → Login → Switch modes → Open apps → Drag windows → File manager preview.",
-      },
+      { id: "f3", name: "demo-script.txt", type: "text", content: "Demo flow notes" },
     ],
   },
   {
-    id: "music",
-    name: "Music",
-    files: [
-      {
-        name: "song1.mp3",
-        type: "Audio File",
-        content: "This is an audio file stored in the music folder.",
-      },
-      {
-        name: "song2.mp3",
-        type: "Audio File",
-        content: "This is another demo music file.",
-      },
-    ],
+    id: "media",
+    name: "Media",
+    files: [],
   },
 ];
 
 export default function FileManagerApp() {
-  const [selectedFolderId, setSelectedFolderId] = useState("documents");
-  const [selectedFile, setSelectedFile] = useState(folders[0].files[0]);
+  const [folders, setFolders] = useState(firstFolders);
+  const [activeFolderId, setActiveFolderId] = useState("documents");
+  const [newFolderName, setNewFolderName] = useState("");
+  const [newFileName, setNewFileName] = useState("");
+  const [newFileText, setNewFileText] = useState("");
 
-  const selectedFolder = folders.find((folder) => folder.id === selectedFolderId);
+  const activeFolder = folders.find((folder) => folder.id === activeFolderId);
 
-  const openFolder = (folderId) => {
-    const folder = folders.find((item) => item.id === folderId);
-    setSelectedFolderId(folderId);
-    setSelectedFile(folder.files[0]);
+  const createFolder = () => {
+    const cleanName = newFolderName.trim();
+
+    if (!cleanName) {
+      alert("Folder name required.");
+      return;
+    }
+
+    const folderExists = folders.some(
+      (folder) => folder.name.toLowerCase() === cleanName.toLowerCase()
+    );
+
+    if (folderExists) {
+      alert("Folder already exists.");
+      return;
+    }
+
+    const newFolder = {
+      id: Date.now().toString(),
+      name: cleanName,
+      files: [],
+    };
+
+    setFolders([...folders, newFolder]);
+    setActiveFolderId(newFolder.id);
+    setNewFolderName("");
+  };
+
+  const createTextFile = () => {
+    const cleanName = newFileName.trim();
+
+    if (!cleanName) {
+      alert("File name required.");
+      return;
+    }
+
+    const finalName = cleanName.endsWith(".txt") ? cleanName : `${cleanName}.txt`;
+
+    const fileExists = activeFolder.files.some(
+      (file) => file.name.toLowerCase() === finalName.toLowerCase()
+    );
+
+    if (fileExists) {
+      alert("File already exists in this folder.");
+      return;
+    }
+
+    const updatedFolders = folders.map((folder) => {
+      if (folder.id !== activeFolderId) return folder;
+
+      return {
+        ...folder,
+        files: [
+          ...folder.files,
+          {
+            id: Date.now().toString(),
+            name: finalName,
+            type: "text",
+            content: newFileText || "Empty text file",
+          },
+        ],
+      };
+    });
+
+    setFolders(updatedFolders);
+    setNewFileName("");
+    setNewFileText("");
+  };
+
+  const deleteFile = (fileId) => {
+    const updatedFolders = folders.map((folder) => {
+      if (folder.id !== activeFolderId) return folder;
+
+      return {
+        ...folder,
+        files: folder.files.filter((file) => file.id !== fileId),
+      };
+    });
+
+    setFolders(updatedFolders);
+  };
+
+  const deleteFolder = (folderId) => {
+    if (folders.length === 1) {
+      alert("At least one folder is required.");
+      return;
+    }
+
+    const remainingFolders = folders.filter((folder) => folder.id !== folderId);
+    setFolders(remainingFolders);
+
+    if (activeFolderId === folderId) {
+      setActiveFolderId(remainingFolders[0].id);
+    }
   };
 
   return (
-    <div className="file-manager-app">
+    <div className="file-manager-app simple-file-manager">
       <aside className="file-sidebar">
-        <h3>Files</h3>
+        <h3>Folders</h3>
+
+        <div className="folder-create-box">
+          <input
+            placeholder="New folder"
+            value={newFolderName}
+            onChange={(e) => setNewFolderName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") createFolder();
+            }}
+          />
+          <button onClick={createFolder}>Create</button>
+        </div>
 
         {folders.map((folder) => (
-          <button
+          <div
             key={folder.id}
-            className={selectedFolderId === folder.id ? "active-folder" : ""}
-            onClick={() => openFolder(folder.id)}
+            className={`folder-row ${activeFolderId === folder.id ? "active-folder" : ""}`}
           >
-            📁 {folder.name}
-          </button>
+            <button onClick={() => setActiveFolderId(folder.id)}>
+              📁 {folder.name}
+            </button>
+
+           
+          </div>
         ))}
       </aside>
 
-      <section className="file-list">
-        <h3>{selectedFolder.name}</h3>
+      <main className="file-main-area">
+        <div className="file-toolbar">
+          <div>
+            <h3>{activeFolder.name}</h3>
+            <p>{activeFolder.files.length} files</p>
+          </div>
+        </div>
 
-        {selectedFolder.files.map((file) => (
-          <button
-            key={file.name}
-            className={selectedFile?.name === file.name ? "active-file" : ""}
-            onClick={() => setSelectedFile(file)}
-          >
-            <span>{file.name.endsWith(".mp3") ? "🎵" : "📄"}</span>
-            <div>
-              <strong>{file.name}</strong>
-              <small>{file.type}</small>
-            </div>
-          </button>
-        ))}
-      </section>
+        <div className="file-create-panel">
+          <input
+            placeholder="Text file name"
+            value={newFileName}
+            onChange={(e) => setNewFileName(e.target.value)}
+          />
 
-      <section className="file-preview">
-        <h3>Preview</h3>
+          <textarea
+            placeholder="Write file content..."
+            value={newFileText}
+            onChange={(e) => setNewFileText(e.target.value)}
+          />
 
-        {selectedFile ? (
-          <>
-            <p className="file-name">{selectedFile.name}</p>
-            <pre>{selectedFile.content}</pre>
-          </>
-        ) : (
-          <p>Select a file to preview.</p>
-        )}
-      </section>
+          <button onClick={createTextFile}>Create Text File</button>
+        </div>
+
+        <div className="file-list-view">
+          {activeFolder.files.length === 0 ? (
+            <p className="empty-folder">No files yet. Create one.</p>
+          ) : (
+            activeFolder.files.map((file) => (
+              <div key={file.id} className="file-row">
+                <div>
+                  <strong>📄 {file.name}</strong>
+                  <small>{file.content}</small>
+                </div>
+
+                <button onClick={() => deleteFile(file.id)}>Delete</button>
+              </div>
+            ))
+          )}
+        </div>
+      </main>
     </div>
   );
 }
