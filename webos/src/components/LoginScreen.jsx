@@ -1,28 +1,41 @@
 import { useState } from "react";
 
-export default function LoginScreen({ onLogin }) {
-  const [name, setName] = useState("");
+export default function LoginScreen({ previousUser, onLogin, onGuestLogin }) {
+  const [nameInput, setNameInput] = useState(
+    previousUser === "Guest" ? "" : previousUser
+  );
 
   return (
-    <div className="login-screen">
-      <div className="login-box">
-        <div className="avatar">N</div>
-        <h2>Welcome to NexOS</h2>
+    <main className="login-screen">
+      <section className="login-card">
+        <div className="login-logo">H</div>
+
+        <h1>Welcome to HyperOS</h1>
+        <p>A browser desktop that adapts to how you work.</p>
 
         <input
+          value={nameInput}
           placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setNameInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") onLogin(name);
+            if (e.key === "Enter") onLogin(nameInput);
           }}
         />
 
-        <button onClick={() => onLogin(name)}>Enter Desktop</button>
-        <button className="guest-btn" onClick={() => onLogin("Guest")}>
+        <button className="primary-login-btn" onClick={() => onLogin(nameInput)}>
+          Enter Desktop
+        </button>
+
+        <button className="secondary-login-btn" onClick={onGuestLogin}>
           Continue as Guest
         </button>
-      </div>
-    </div>
+
+        <div className="login-modes-preview">
+          <span>🎓 Student</span>
+          <span>💻 Developer</span>
+          <span>🎧 Casual</span>
+        </div>
+      </section>
+    </main>
   );
 }
