@@ -537,3 +537,78 @@ button {
 .taskbar-status strong {
   font-size: 15px;
 }
+
+.file-manager-app {
+  display: grid;
+  grid-template-columns: 120px 1fr 1.2fr;
+  gap: 12px;
+  min-height: 240px;
+}
+
+.file-sidebar,
+.file-list,
+.file-preview {
+  border-radius: 16px;
+  background: #f8fafc;
+  padding: 12px;
+}
+
+.file-sidebar h3,
+.file-list h3,
+.file-preview h3 {
+  margin: 0 0 10px;
+}
+
+.file-sidebar button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: none;
+  border-radius: 12px;
+  text-align: left;
+  background: transparent;
+}
+
+.file-sidebar button:hover,
+.file-sidebar .active-folder {
+  background: #dbeafe;
+}
+
+.file-list button {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: none;
+  border-radius: 12px;
+  text-align: left;
+  background: white;
+}
+
+.file-list .active-file {
+  background: #dbeafe;
+}
+
+.file-list small {
+  display: block;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.file-name {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.file-preview pre {
+  white-space: pre-wrap;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  min-height: 130px;
+  margin: 0;
+  font-family: monospace;
+  font-size: 13px;
+}

@@ -3,6 +3,7 @@ import { hyperApps, modeInfo } from "../data/apps";
 import StartMenu from "./StartMenu";
 import Taskbar from "./Taskbar";
 import Window from "./Window";
+import FileManagerApp from "../apps/FileManagerApp";
 
 export default function Desktop({ userName, onLogout }) {
   const [activeMode, setActiveMode] = useState("student");
@@ -55,6 +56,7 @@ export default function Desktop({ userName, onLogout }) {
   };
 
   const renderAppContent = (appId) => {
+    if (appId === "files") return <FileManagerApp />;
     return (
       <div className="coming-soon-app">
         <h2>{hyperApps.find((app) => app.id === appId)?.title}</h2>
