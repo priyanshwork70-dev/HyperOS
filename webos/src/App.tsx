@@ -3,59 +3,57 @@ import BootScreen from "./components/BootScreen";
 import LoginScreen from "./components/LoginScreen";
 import Desktop from "./components/Desktop";
 
-const BOOT_DELAY = 1700;
-const SAVED_USER_KEY = "hyperos:lastUser";
+const BOOT_TIME = 1800;
+const USER_KEY = "hyperos:lastUser";
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState("boot");
-  const [desktopUser, setDesktopUser] = useState(() => {
-    return localStorage.getItem(SAVED_USER_KEY) || "Guest";
+  const [screen, setScreen] = useState("boot");
+  const [activeUser, setActiveUser] = useState(() => {
+    return localStorage.getItem(USER_KEY) || "Guest";
   });
 
   useEffect(() => {
-    const bootTimer = setTimeout(() => {
-      setCurrentScreen("login");
-    }, BOOT_DELAY);
+    const timer = setTimeout(() => {
+      setScreen("login");
+    }, BOOT_TIME);
 
-    return () => clearTimeout(bootTimer);
+    return () => clearTimeout(timer);
   }, []);
 
-  const handleLogin = (nameFromInput) => {
-    const cleanedName = nameFromInput.trim();
+  const loginUser = (typedName) => {
+    const cleanName = typedName.trim();
 
-    if (cleanedName.length < 2) {
-      alert("Please enter at least 2 characters.");
+    if (cleanName.length < 2) {
+      alert("Enter at least 2 characters.");
       return;
     }
 
-    localStorage.setItem(SAVED_USER_KEY, cleanedName);
-    setDesktopUser(cleanedName);
-    setCurrentScreen("desktop");
+    localStorage.setItem(USER_KEY, cleanName);
+    setActiveUser(cleanName);
+    setScreen("desktop");
   };
 
-  const continueAsGuest = () => {
-    localStorage.setItem(SAVED_USER_KEY, "Guest");
-    setDesktopUser("Guest");
-    setCurrentScreen("desktop");
+  const guestLogin = () => {
+    localStorage.setItem(USER_KEY, "Guest");
+    setActiveUser("Guest");
+    setScreen("desktop");
   };
 
   const logoutUser = () => {
-    setCurrentScreen("login");
+    setScreen("login");
   };
 
-  if (currentScreen === "boot") {
-    return <BootScreen />;
-  }
+  if (screen === "boot") return <BootScreen />;
 
-  if (currentScreen === "login") {
+  if (screen === "login") {
     return (
       <LoginScreen
-        previousUser={desktopUser}
-        onLogin={handleLogin}
-        onGuestLogin={continueAsGuest}
+        previousUser={activeUser}
+        onLogin={loginUser}
+        onGuestLogin={guestLogin}
       />
     );
   }
 
-  return <Desktop userName={desktopUser} onLogout={logoutUser} />;
+  return <Desktop userName={activeUser} onLogout={logoutUser} />;
 }
