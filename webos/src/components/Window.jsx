@@ -1,63 +1,61 @@
 import { useState } from "react";
 
-export default function Window({
-  title,
-  children,
-  onClose,
-  onMinimize,
-  offset = 0,
-}) {
-  const [position, setPosition] = useState({
-    x: 120 + offset * 30,
-    y: 90 + offset * 30,
+export default function Window({ title, children, onClose, onMinimize, offset = 0 }) {
+  const [windowPosition, setWindowPosition] = useState({
+    x: 140 + offset * 32,
+    y: 120 + offset * 32,
   });
 
-  const [dragging, setDragging] = useState(false);
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartGap, setDragStartGap] = useState({ x: 0, y: 0 });
 
-  const startDrag = (e) => {
-    setDragging(true);
-    setMouseOffset({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
+  const startMovingWindow = (event) => {
+    setIsDragging(true);
+
+    setDragStartGap({
+      x: event.clientX - windowPosition.x,
+      y: event.clientY - windowPosition.y,
     });
   };
 
-  const drag = (e) => {
-    if (!dragging) return;
+  const moveWindow = (event) => {
+    if (!isDragging) return;
 
-    setPosition({
-      x: e.clientX - mouseOffset.x,
-      y: e.clientY - mouseOffset.y,
+    setWindowPosition({
+      x: event.clientX - dragStartGap.x,
+      y: event.clientY - dragStartGap.y,
     });
   };
 
-  const stopDrag = () => {
-    setDragging(false);
+  const stopMovingWindow = () => {
+    setIsDragging(false);
   };
 
   return (
-    <div
-      className="window"
-      style={{ left: position.x, top: position.y }}
-      onMouseMove={drag}
-      onMouseUp={stopDrag}
-      onMouseLeave={stopDrag}
+    <section
+      className="app-window"
+      style={{
+        left: windowPosition.x,
+        top: windowPosition.y,
+      }}
+      onMouseMove={moveWindow}
+      onMouseUp={stopMovingWindow}
+      onMouseLeave={stopMovingWindow}
     >
-      <div className="window-header" onMouseDown={startDrag}>
+      <div className="window-titlebar" onMouseDown={startMovingWindow}>
         <span>{title}</span>
 
-        <div className="window-actions">
-          <button className="min-btn" onClick={onMinimize}>
+        <div className="window-controls">
+          <button className="window-minimize" onClick={onMinimize}>
             —
           </button>
-          <button className="close-btn" onClick={onClose}>
-            X
+          <button className="window-close" onClick={onClose}>
+            ×
           </button>
         </div>
       </div>
 
-      <div className="window-body">{children}</div>
-    </div>
+      <div className="window-content">{children}</div>
+    </section>
   );
 }
