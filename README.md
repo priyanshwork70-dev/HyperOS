@@ -54,25 +54,6 @@ React (Vite)
 CSS for styling
 LocalStorage for persistence
 
-Getting Started
-Install dependencies:
-npm install
-
-Run locally:
-npm run dev
-
-Build for production:
-npm run build
-
-
-Deployment
-For Netlify:
-Run the build command:
-npm run build
-
-Upload the dist folder to:
-https://app.netlify.com/drop
-
 Folder Structure
 src/
  ├── apps/
@@ -83,12 +64,7 @@ src/
  ├── main.jsx
 
 
-Future Improvements
-More advanced terminal commands
-Drag and drop support in file manager
-App store system
-Cloud sync
-Notification system
+
 
 Summary
 HyperOS is an attempt to bring a full desktop-like experience into the browser, where the interface adapts based on how the user wants to use it.
