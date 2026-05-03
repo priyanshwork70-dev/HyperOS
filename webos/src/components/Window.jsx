@@ -40,10 +40,10 @@ export default function Window({ title, children, onClose, onMinimize, offset = 
       setWindowBox(defaultBox);
     } else {
       setWindowBox({
-        x: 10,
-        y: 60,
-        width: window.innerWidth - 20,
-        height: window.innerHeight - 120,
+        x: 0,
+        y: 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
       });
     }
     setIsMaximized(!isMaximized);
@@ -53,9 +53,9 @@ export default function Window({ title, children, onClose, onMinimize, offset = 
     setIsMaximized(false);
     setWindowBox({
       x: 10,
-      y: 60,
+      y: 0,
       width: window.innerWidth / 2 - 15,
-      height: window.innerHeight - 120,
+      height: window.innerHeight ,
     });
   };
 
@@ -63,9 +63,9 @@ export default function Window({ title, children, onClose, onMinimize, offset = 
     setIsMaximized(false);
     setWindowBox({
       x: window.innerWidth / 2 + 5,
-      y: 60,
+      y: 0,
       width: window.innerWidth / 2 - 15,
-      height: window.innerHeight - 120,
+      height: window.innerHeight ,
     });
   };
 

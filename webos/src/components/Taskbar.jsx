@@ -1,4 +1,5 @@
 import { hyperApps, modeInfo } from "../data/apps";
+import windowIcon from "../assets/icons/window.png";
 
 export default function Taskbar({
   activeMode,
@@ -12,33 +13,50 @@ export default function Taskbar({
     minute: "2-digit",
   });
 
+  const today = new Date().toLocaleDateString([], {
+    day: "2-digit",
+    month: "short",
+  });
+
   return (
     <footer className="taskbar">
-      <button className="taskbar-start" onClick={onStartClick}>
-        <span>{modeInfo[activeMode].emoji}</span>
-        Start
-      </button>
+     <button className="taskbar-start" onClick={onStartClick}>
+  <img src={windowIcon} alt="HyperOS" />
+  <strong>HyperOS</strong>
+</button>
 
-      <div className="taskbar-running-apps">
-        {openWindowIds.map((appId) => {
-          const app = hyperApps.find((item) => item.id === appId);
+      <div className="taskbar-dock">
+        {openWindowIds.length === 0 ? (
+          <span className="dock-empty">No apps running</span>
+        ) : (
+          openWindowIds.map((appId) => {
+            const app = hyperApps.find((item) => item.id === appId);
+            const isMinimized = minimizedWindowIds.includes(appId);
 
-          return (
-            <button
-              key={appId}
-              className={minimizedWindowIds.includes(appId) ? "task-minimized" : ""}
-              onClick={() => onAppClick(appId)}
-              title={app?.title}
-            >
-              <img src={app?.icon} alt={app?.title} />
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={appId}
+                className={isMinimized ? "dock-app minimized-app" : "dock-app"}
+                onClick={() => onAppClick(appId)}
+                title={app?.title}
+              >
+                <img src={app?.icon} alt={app?.title} />
+                <span>{app?.title}</span>
+              </button>
+            );
+          })
+        )}
       </div>
 
-      <div className="taskbar-status">
-        <span>{modeInfo[activeMode].label}</span>
-        <strong>{currentTime}</strong>
+      <div className="taskbar-right">
+        <div className="mode-chip">
+          {modeInfo[activeMode].emoji} {modeInfo[activeMode].label}
+        </div>
+
+        <div className="taskbar-clock">
+          <strong>{currentTime}</strong>
+          <span>{today}</span>
+        </div>
       </div>
     </footer>
   );

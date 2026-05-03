@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 import studentWall from "../assets/wallpaper/student.jpg";
 import devWall from "../assets/wallpaper/dev.jpg";
+
 import casualWall from "../assets/wallpaper/casual.jpg";
 
 const modeLabels = {
