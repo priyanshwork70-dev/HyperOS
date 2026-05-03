@@ -1,72 +1,92 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function TerminalApp({ openApp, user }) {
+export default function TerminalApp({ openApp }) {
   const [history, setHistory] = useState([
-    "NexOS Terminal",
-    "Type 'help' to see commands.",
+    "HyperOS Terminal v1.0",
+    "Type 'help' to see commands",
   ]);
+  const [input, setInput] = useState("");
+  const endRef = useRef(null);
 
-  const [command, setCommand] = useState("");
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history]);
 
-  const runCommand = () => {
-    const cmd = command.trim().toLowerCase();
+  const runCommand = (cmd) => {
+    const args = cmd.trim().split(" ");
+    const main = args[0];
 
-    if (!cmd) return;
+    switch (main) {
+      case "help":
+        return [
+          "Available commands:",
+          "help",
+          "clear",
+          "date",
+          "whoami",
+          "echo [text]",
+          "open [app]",
+          "apps",
+        ];
 
-    if (cmd === "clear") {
-      setHistory([]);
-      setCommand("");
-      return;
+      case "clear":
+        setHistory([]);
+        return [];
+
+      case "date":
+        return [new Date().toString()];
+
+      case "whoami":
+        return ["HyperOS User"];
+
+      case "echo":
+        return [args.slice(1).join(" ")];
+
+      case "apps":
+        return ["notes, calculator, files, music, clock, settings"];
+
+      case "open":
+        if (!args[1]) return ["Usage: open [app]"];
+
+        if (openApp) {
+          openApp(args[1]);
+        }
+
+        return [`Opening ${args[1]}...`];
+
+      default:
+        return [`Command not found: ${cmd}`];
     }
+  };
 
-    let output = "";
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    if (cmd === "help") {
-      output =
-        "Commands: help, clear, date, whoami, open notes, open calc, open todo, open music, open settings";
-    } else if (cmd === "date") {
-      output = new Date().toString();
-    } else if (cmd === "whoami") {
-      output = user;
-    } else if (cmd === "open notes") {
-      openApp("notes");
-      output = "Opening Notes...";
-    } else if (cmd === "open calc") {
-      openApp("calc");
-      output = "Opening Calculator...";
-    } else if (cmd === "open todo") {
-      openApp("todo");
-      output = "Opening To-Do...";
-    } else if (cmd === "open music") {
-      openApp("music");
-      output = "Opening Music Player...";
-    } else if (cmd === "open settings") {
-      openApp("settings");
-      output = "Opening Settings...";
-    } else {
-      output = "Command not found";
-    }
+    if (!input.trim()) return;
 
-    setHistory([...history, `> ${command}`, output]);
-    setCommand("");
+    const output = runCommand(input);
+
+    setHistory((prev) => [...prev, `> ${input}`, ...output]);
+    setInput("");
   };
 
   return (
     <div className="terminal-app">
-      <div className="terminal-history">
+      <div className="terminal-output">
         {history.map((line, index) => (
           <p key={index}>{line}</p>
         ))}
+        <div ref={endRef} />
       </div>
 
-      <input
-        value={command}
-        onChange={(e) => setCommand(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") runCommand();
-        }}
-        placeholder="Type command..."
-      />
+      <form onSubmit={handleSubmit} className="terminal-input-row">
+        <span>$</span>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          autoFocus
+        />
+      </form>
     </div>
   );
 }

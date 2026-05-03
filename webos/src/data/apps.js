@@ -6,6 +6,10 @@ import terminalIcon from "../assets/icons/terminal.png";
 import musicIcon from "../assets/icons/music.png";
 import fileIcon from "../assets/icons/filemanager.png";
 
+import clockIcon from "../assets/icons/clock.png";
+
+
+
 export const hyperApps = [
   {
     id: "notes",
@@ -13,6 +17,12 @@ export const hyperApps = [
     icon: notesIcon,
     modes: ["student", "developer", "casual"],
   },
+  {
+  id: "clock",
+  title: "Clock",
+  icon: clockIcon,
+  modes: ["student", "developer", "casual"]
+},
   {
     id: "todo",
     title: "Tasks",

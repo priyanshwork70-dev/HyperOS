@@ -10,6 +10,8 @@ import CalculatorApp from "../apps/CalculatorApp";
 import SettingsApp from "../apps/SettingsApp";
 import MusicApp from "../apps/MusicApp";
 import NotesApp from "../apps/NotesApp";
+import ClockApp from "../apps/ClockApp";
+import TerminalApp from "../apps/TerminalApp";
 
 import studentWall from "../assets/wallpaper/student.jpg";
 import devWall from "../assets/wallpaper/dev.jpg";
@@ -129,6 +131,10 @@ export default function Desktop({ userName, onLogout }) {
 
     if (appId === "calculator") return <CalculatorApp />;
     if (appId === "notes") return <NotesApp />;
+    if (appId === "clock") return <ClockApp />;
+    if (appId === "terminal") {
+  return <TerminalApp openApp={openApp} />;
+}
 
     if (appId === "settings") {
       return (
@@ -146,7 +152,7 @@ export default function Desktop({ userName, onLogout }) {
     return (
       <div className="coming-soon-app">
         <h2>{hyperApps.find((app) => app.id === appId)?.title}</h2>
-        <p>This app shell is ready. We will build its full features next.</p>
+        <p>Abhi app ka bas canvas bana h app ban rhi h</p>
       </div>
     );
   };
@@ -183,7 +189,7 @@ export default function Desktop({ userName, onLogout }) {
       </section>
 
       <section className="desktop-user-card">
-        <p>Signed in as</p>
+        <p>Welcome Malik</p>
         <h3>{userName}</h3>
         <span>
           {modeInfo[activeMode].emoji} {modeInfo[activeMode].label} Mode

@@ -7,7 +7,7 @@ const defaultNotes = [
     id: "welcome-note",
     title: "Welcome Note",
     content:
-      "Welcome to HyperOS Notepad.\n\nUse this app to write ideas, tasks, project notes, and demo scripts.",
+      "Welcome to HyperOS Notepad.\n\nUse this app to write your crazy ideas.",
   },
 ];
 
