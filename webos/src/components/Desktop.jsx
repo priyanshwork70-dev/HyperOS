@@ -8,6 +8,7 @@ import Window from "./Window";
 import FileManagerApp from "../apps/FileManagerApp";
 import CalculatorApp from "../apps/CalculatorApp";
 import SettingsApp from "../apps/SettingsApp";
+import MusicApp from "../apps/MusicApp";
 
 import studentWall from "../assets/wallpaper/student.jpg";
 import devWall from "../assets/wallpaper/dev.jpg";
@@ -137,6 +138,8 @@ export default function Desktop({ userName, onLogout }) {
         />
       );
     }
+
+    if (appId === "music") return <MusicApp />;
 
     return (
       <div className="coming-soon-app">
