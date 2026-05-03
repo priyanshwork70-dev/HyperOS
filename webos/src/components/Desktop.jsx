@@ -9,6 +9,7 @@ import FileManagerApp from "../apps/FileManagerApp";
 import CalculatorApp from "../apps/CalculatorApp";
 import SettingsApp from "../apps/SettingsApp";
 import MusicApp from "../apps/MusicApp";
+import NotesApp from "../apps/NotesApp";
 
 import studentWall from "../assets/wallpaper/student.jpg";
 import devWall from "../assets/wallpaper/dev.jpg";
@@ -127,6 +128,7 @@ export default function Desktop({ userName, onLogout }) {
     if (appId === "files") return <FileManagerApp />;
 
     if (appId === "calculator") return <CalculatorApp />;
+    if (appId === "notes") return <NotesApp />;
 
     if (appId === "settings") {
       return (
