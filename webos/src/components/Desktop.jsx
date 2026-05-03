@@ -12,6 +12,7 @@ import MusicApp from "../apps/MusicApp";
 import NotesApp from "../apps/NotesApp";
 import ClockApp from "../apps/ClockApp";
 import TerminalApp from "../apps/TerminalApp";
+import TodoApp from "../apps/TodoApp";
 
 import studentWall from "../assets/wallpaper/student.jpg";
 import devWall from "../assets/wallpaper/dev.jpg";
@@ -132,6 +133,7 @@ export default function Desktop({ userName, onLogout }) {
     if (appId === "calculator") return <CalculatorApp />;
     if (appId === "notes") return <NotesApp />;
     if (appId === "clock") return <ClockApp />;
+    if (appId === "todo") return <TodoApp />;
     if (appId === "terminal") {
   return <TerminalApp openApp={openApp} />;
 }

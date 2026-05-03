@@ -1268,3 +1268,132 @@ button {
   font-family: monospace;
   font-size: 14px;
 }
+
+.todo-app {
+  height: 100%;
+  color: #0f172a;
+}
+
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.todo-header h2,
+.todo-header p {
+  margin: 0;
+}
+
+.todo-header p {
+  margin-top: 4px;
+  color: #64748b;
+}
+
+.todo-header button {
+  border: none;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: #ef4444;
+  color: white;
+}
+
+.todo-create-box {
+  display: grid;
+  grid-template-columns: 1fr 100px 70px;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.todo-create-box input,
+.todo-create-box select {
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  outline: none;
+}
+
+.todo-create-box button {
+  border: none;
+  border-radius: 14px;
+  background: var(--accent-color, #2563eb);
+  color: white;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-item {
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.todo-check {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--accent-color, #2563eb);
+  border-radius: 10px;
+  background: white;
+  color: var(--accent-color, #2563eb);
+  font-weight: bold;
+}
+
+.todo-info strong {
+  display: block;
+}
+
+.priority-tag {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.priority-tag.high {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.priority-tag.medium {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.priority-tag.low {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.todo-delete {
+  border: none;
+  border-radius: 10px;
+  background: #ef4444;
+  color: white;
+  width: 30px;
+  height: 30px;
+}
+
+.done-task {
+  opacity: 0.65;
+}
+
+.done-task strong {
+  text-decoration: line-through;
+}
+
+.empty-tasks {
+  padding: 20px;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #64748b;
+}
