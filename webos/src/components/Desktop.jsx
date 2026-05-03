@@ -1,10 +1,32 @@
 import { useMemo, useState } from "react";
 import { hyperApps, modeInfo } from "../data/apps";
+
 import StartMenu from "./StartMenu";
 import Taskbar from "./Taskbar";
 import Window from "./Window";
+
 import FileManagerApp from "../apps/FileManagerApp";
 import CalculatorApp from "../apps/CalculatorApp";
+import SettingsApp from "../apps/SettingsApp";
+
+import studentWall from "../assets/wallpaper/student.jpg";
+import devWall from "../assets/wallpaper/dev.jpg";
+import casualWall from "../assets/wallpaper/casual.jpg";
+
+const defaultModeTheme = {
+  student: {
+    wallpaper: `url(${studentWall})`,
+    accent: "#2563eb",
+  },
+  developer: {
+    wallpaper: `url(${devWall})`,
+    accent: "#22c55e",
+  },
+  casual: {
+    wallpaper: `url(${casualWall})`,
+    accent: "#ec4899",
+  },
+};
 
 export default function Desktop({ userName, onLogout }) {
   const [activeMode, setActiveMode] = useState("student");
@@ -12,33 +34,72 @@ export default function Desktop({ userName, onLogout }) {
   const [openWindowIds, setOpenWindowIds] = useState([]);
   const [minimizedWindowIds, setMinimizedWindowIds] = useState([]);
 
+  const [modeTheme, setModeTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("hyperos:modeTheme");
+
+    if (!savedTheme) return defaultModeTheme;
+
+    try {
+      return JSON.parse(savedTheme);
+    } catch {
+      return defaultModeTheme;
+    }
+  });
+
   const visibleApps = useMemo(() => {
     return hyperApps.filter((app) => app.modes.includes(activeMode));
   }, [activeMode]);
 
+  const updateModeTheme = (mode, changes) => {
+    setModeTheme((oldTheme) => {
+      const newTheme = {
+        ...oldTheme,
+        [mode]: {
+          ...oldTheme[mode],
+          ...changes,
+        },
+      };
+
+      localStorage.setItem("hyperos:modeTheme", JSON.stringify(newTheme));
+      return newTheme;
+    });
+  };
+
+  const resetModeTheme = (mode) => {
+    setModeTheme((oldTheme) => {
+      const newTheme = {
+        ...oldTheme,
+        [mode]: defaultModeTheme[mode],
+      };
+
+      localStorage.setItem("hyperos:modeTheme", JSON.stringify(newTheme));
+      return newTheme;
+    });
+  };
+
   const openApp = (appId) => {
     if (!openWindowIds.includes(appId)) {
-      setOpenWindowIds((prev) => [...prev, appId]);
+      setOpenWindowIds((oldIds) => [...oldIds, appId]);
     }
 
-    setMinimizedWindowIds((prev) => prev.filter((id) => id !== appId));
+    setMinimizedWindowIds((oldIds) => oldIds.filter((id) => id !== appId));
     setStartMenuOpen(false);
   };
 
   const closeApp = (appId) => {
-    setOpenWindowIds((prev) => prev.filter((id) => id !== appId));
-    setMinimizedWindowIds((prev) => prev.filter((id) => id !== appId));
+    setOpenWindowIds((oldIds) => oldIds.filter((id) => id !== appId));
+    setMinimizedWindowIds((oldIds) => oldIds.filter((id) => id !== appId));
   };
 
   const minimizeApp = (appId) => {
     if (!minimizedWindowIds.includes(appId)) {
-      setMinimizedWindowIds((prev) => [...prev, appId]);
+      setMinimizedWindowIds((oldIds) => [...oldIds, appId]);
     }
   };
 
   const toggleFromTaskbar = (appId) => {
     if (minimizedWindowIds.includes(appId)) {
-      setMinimizedWindowIds((prev) => prev.filter((id) => id !== appId));
+      setMinimizedWindowIds((oldIds) => oldIds.filter((id) => id !== appId));
     } else {
       minimizeApp(appId);
     }
@@ -48,17 +109,34 @@ export default function Desktop({ userName, onLogout }) {
     setActiveMode(newMode);
     setStartMenuOpen(false);
 
-    const allowedIds = hyperApps
+    const allowedAppIds = hyperApps
       .filter((app) => app.modes.includes(newMode))
       .map((app) => app.id);
 
-    setOpenWindowIds((prev) => prev.filter((id) => allowedIds.includes(id)));
-    setMinimizedWindowIds((prev) => prev.filter((id) => allowedIds.includes(id)));
+    setOpenWindowIds((oldIds) =>
+      oldIds.filter((id) => allowedAppIds.includes(id))
+    );
+
+    setMinimizedWindowIds((oldIds) =>
+      oldIds.filter((id) => allowedAppIds.includes(id))
+    );
   };
 
   const renderAppContent = (appId) => {
     if (appId === "files") return <FileManagerApp />;
+
     if (appId === "calculator") return <CalculatorApp />;
+
+    if (appId === "settings") {
+      return (
+        <SettingsApp
+          activeMode={activeMode}
+          modeTheme={modeTheme}
+          updateModeTheme={updateModeTheme}
+          resetModeTheme={resetModeTheme}
+        />
+      );
+    }
 
     return (
       <div className="coming-soon-app">
@@ -69,7 +147,16 @@ export default function Desktop({ userName, onLogout }) {
   };
 
   return (
-    <main className={`desktop ${activeMode}`}>
+    <main
+      className={`desktop ${activeMode}`}
+      style={{
+        backgroundImage: modeTheme[activeMode].wallpaper,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        "--accent-color": modeTheme[activeMode].accent,
+      }}
+    >
       <section className="desktop-topbar">
         <div>
           <h1>HyperOS</h1>
@@ -93,12 +180,18 @@ export default function Desktop({ userName, onLogout }) {
       <section className="desktop-user-card">
         <p>Signed in as</p>
         <h3>{userName}</h3>
-        <span>{modeInfo[activeMode].emoji} {modeInfo[activeMode].label} Mode</span>
+        <span>
+          {modeInfo[activeMode].emoji} {modeInfo[activeMode].label} Mode
+        </span>
       </section>
 
       <section className="desktop-icons">
         {visibleApps.map((app) => (
-          <button key={app.id} className="desktop-icon" onClick={() => openApp(app.id)}>
+          <button
+            key={app.id}
+            className="desktop-icon"
+            onClick={() => openApp(app.id)}
+          >
             <img src={app.icon} alt={app.title} />
             <span>{app.title}</span>
           </button>
@@ -138,7 +231,7 @@ export default function Desktop({ userName, onLogout }) {
         activeMode={activeMode}
         openWindowIds={openWindowIds}
         minimizedWindowIds={minimizedWindowIds}
-        onStartClick={() => setStartMenuOpen((prev) => !prev)}
+        onStartClick={() => setStartMenuOpen((oldValue) => !oldValue)}
         onAppClick={toggleFromTaskbar}
       />
     </main>

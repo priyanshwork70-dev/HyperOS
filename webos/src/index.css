@@ -9,13 +9,16 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font-family: inherit;
 }
 
 button {
   cursor: pointer;
 }
+
+/* BOOT + LOGIN */
 
 .boot-screen,
 .login-screen {
@@ -51,7 +54,6 @@ button {
   background: linear-gradient(135deg, #2563eb, #9333ea);
   font-size: 38px;
   font-weight: 800;
-  box-shadow: 0 0 28px rgba(37, 99, 235, 0.55);
 }
 
 .boot-panel h1,
@@ -142,33 +144,29 @@ button {
   background: rgba(255, 255, 255, 0.12);
 }
 
+/* DESKTOP */
+
 .desktop {
+  position: relative;
   width: 100vw;
   height: 100vh;
   padding: 24px;
   overflow: hidden;
+  color: white;
   transition: background 0.45s ease, color 0.45s ease;
 }
 
-.desktop.student {
-  background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
-    linear-gradient(135deg, #f8fafc, #dbeafe);
-  color: #0f172a;
+.desktop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.28);
+  z-index: 0;
 }
 
-.desktop.developer {
-  background:
-    radial-gradient(circle at top right, rgba(34, 197, 94, 0.22), transparent 30%),
-    linear-gradient(135deg, #020617, #0f172a);
-  color: #dcfce7;
-}
-
-.desktop.casual {
-  background:
-    radial-gradient(circle at top, rgba(236, 72, 153, 0.28), transparent 35%),
-    linear-gradient(135deg, #1e3a8a, #7e22ce, #db2777);
-  color: white;
+.desktop > * {
+  position: relative;
+  z-index: 1;
 }
 
 .desktop-topbar {
@@ -184,8 +182,10 @@ button {
 
 .desktop-topbar p {
   margin: 6px 0 0;
-  opacity: 0.78;
+  opacity: 0.82;
 }
+
+/* MODE SWITCHER */
 
 .mode-switcher {
   display: flex;
@@ -201,7 +201,7 @@ button {
   padding: 10px 14px;
   border-radius: 999px;
   background: transparent;
-  color: inherit;
+  color: white;
 }
 
 .mode-switcher button span {
@@ -209,9 +209,12 @@ button {
 }
 
 .mode-switcher .selected-mode {
-  background: rgba(255, 255, 255, 0.24);
+  background: var(--accent-color, #2563eb);
+  color: white;
   box-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
 }
+
+/* USER CARD */
 
 .desktop-user-card {
   position: absolute;
@@ -223,6 +226,7 @@ button {
   background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.22);
+  color: white;
 }
 
 .desktop-user-card p,
@@ -238,8 +242,10 @@ button {
   display: inline-block;
   margin-top: 12px;
   font-size: 13px;
-  opacity: 0.8;
+  opacity: 0.85;
 }
+
+/* DESKTOP ICONS */
 
 .desktop-icons {
   margin-top: 38px;
@@ -253,16 +259,16 @@ button {
   height: 92px;
   border: none;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.12);
-  color: inherit;
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
   backdrop-filter: blur(18px);
-  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  transition: 0.18s ease;
 }
 
 .desktop-icon:hover {
   transform: translateY(-4px) scale(1.04);
-  background: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.2);
 }
 
 .desktop-icon img {
@@ -277,13 +283,15 @@ button {
   font-size: 13px;
 }
 
+/* WINDOW */
+
 .app-window {
   position: absolute;
-  width: 430px;
-  min-height: 270px;
+  min-width: 480px;
+  min-height: 300px;
   border-radius: 22px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   color: #0f172a;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -305,7 +313,7 @@ button {
 .window-titlebar {
   height: 44px;
   padding: 0 12px 0 16px;
-  background: rgba(15, 23, 42, 0.96);
+  background: linear-gradient(135deg, #111827, var(--accent-color, #2563eb));
   color: white;
   display: flex;
   justify-content: space-between;
@@ -315,26 +323,29 @@ button {
 
 .window-controls {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .window-controls button {
   width: 28px;
   height: 25px;
   border: none;
-  border-radius: 9px;
+  border-radius: 8px;
   color: white;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .window-minimize {
-  background: #f59e0b;
+  background: #f59e0b !important;
 }
 
 .window-close {
-  background: #ef4444;
+  background: #ef4444 !important;
 }
 
 .window-content {
+  height: calc(100% - 44px);
+  overflow: auto;
   padding: 18px;
 }
 
@@ -348,6 +359,8 @@ button {
 .coming-soon-app h2 {
   margin-bottom: 6px;
 }
+
+/* START MENU */
 
 .start-menu {
   position: fixed;
@@ -426,7 +439,7 @@ button {
 }
 
 .start-mode-row .active-start-mode {
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--accent-color, #2563eb);
 }
 
 .start-app-list {
@@ -467,6 +480,8 @@ button {
   color: white;
 }
 
+/* TASKBAR */
+
 .taskbar {
   position: fixed;
   left: 14px;
@@ -489,7 +504,7 @@ button {
   border: none;
   border-radius: 15px;
   padding: 10px 15px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: var(--accent-color, #2563eb);
   color: white;
 }
 
@@ -509,7 +524,7 @@ button {
   border: none;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.12);
-  transition: transform 0.18s ease, opacity 0.18s ease;
+  transition: 0.18s ease;
 }
 
 .taskbar-running-apps button:hover {
@@ -538,139 +553,17 @@ button {
   font-size: 15px;
 }
 
-.file-manager-app {
-  display: grid;
-  grid-template-columns: 120px 1fr 1.2fr;
-  gap: 12px;
-  min-height: 240px;
-}
-
-.file-sidebar,
-.file-list,
-.file-preview {
-  border-radius: 16px;
-  background: #f8fafc;
-  padding: 12px;
-}
-
-.file-sidebar h3,
-.file-list h3,
-.file-preview h3 {
-  margin: 0 0 10px;
-}
-
-.file-sidebar button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 8px;
-  border: none;
-  border-radius: 12px;
-  text-align: left;
-  background: transparent;
-}
-
-.file-sidebar button:hover,
-.file-sidebar .active-folder {
-  background: #dbeafe;
-}
-
-.file-list button {
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
-  margin-bottom: 8px;
-  border: none;
-  border-radius: 12px;
-  text-align: left;
-  background: white;
-}
-
-.file-list .active-file {
-  background: #dbeafe;
-}
-
-.file-list small {
-  display: block;
-  color: #64748b;
-  margin-top: 2px;
-}
-
-.file-name {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.file-preview pre {
-  white-space: pre-wrap;
-  background: white;
-  padding: 12px;
-  border-radius: 12px;
-  min-height: 130px;
-  margin: 0;
-  font-family: monospace;
-  font-size: 13px;
-}
-
-
-.app-window {
-  position: absolute;
-  min-width: 360px;
-  min-height: 260px;
-  border-radius: 22px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.94);
-  color: #0f172a;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: windowPop 0.2s ease;
-  z-index: 20;
-}
-
-.window-content {
-  height: calc(100% - 44px);
-  overflow: auto;
-  padding: 18px;
-}
-
-.window-controls {
-  display: flex;
-  gap: 6px;
-}
-
-.window-controls button {
-  width: 28px;
-  height: 25px;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.window-minimize {
-  background: #f59e0b !important;
-}
-
-.window-close {
-  background: #ef4444 !important;
-}
-
-.app-window {
-  min-width: 480px;
-  min-height: 300px;
-}
+/* FILE MANAGER */
 
 .file-manager-app {
   height: 100%;
   display: grid;
-  grid-template-columns: 150px 1fr 240px;
+  grid-template-columns: 180px 1fr;
   gap: 14px;
 }
 
 .file-sidebar,
-.file-main-area,
-.file-preview {
+.file-main-area {
   border-radius: 18px;
   background: #f8fafc;
   padding: 14px;
@@ -678,139 +571,8 @@ button {
 }
 
 .file-sidebar h3,
-.file-toolbar h3,
-.file-preview h3 {
+.file-toolbar h3 {
   margin: 0 0 12px;
-}
-
-.file-sidebar button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 11px;
-  margin-bottom: 8px;
-  border: none;
-  border-radius: 14px;
-  text-align: left;
-  background: transparent;
-}
-
-.file-sidebar button:hover,
-.file-sidebar .active-folder {
-  background: #dbeafe;
-}
-
-.file-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.file-toolbar p {
-  margin: 3px 0 0;
-  font-size: 13px;
-  color: #64748b;
-}
-
-.file-view-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.file-view-actions button {
-  padding: 8px 11px;
-  border: none;
-  border-radius: 12px;
-  background: #e2e8f0;
-}
-
-.file-view-actions .active-view {
-  background: #2563eb;
-  color: white;
-}
-
-.file-list-view {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.file-grid-view {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 10px;
-}
-
-.file-list-view button,
-.file-grid-view button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 13px;
-  border: none;
-  border-radius: 16px;
-  background: white;
-  text-align: left;
-}
-
-.file-grid-view button {
-  flex-direction: column;
-  align-items: flex-start;
-  min-height: 120px;
-}
-
-.file-list-view .active-file,
-.file-grid-view .active-file {
-  background: #dbeafe;
-  box-shadow: 0 0 0 2px #2563eb33;
-}
-
-.file-type-icon {
-  font-size: 24px;
-}
-
-.file-list-view small,
-.file-grid-view small {
-  display: block;
-  margin-top: 3px;
-  color: #64748b;
-}
-
-.preview-file-card {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  background: white;
-  padding: 12px;
-  border-radius: 16px;
-  margin-bottom: 12px;
-}
-
-.preview-file-card span {
-  font-size: 28px;
-}
-
-.preview-file-card p {
-  margin: 3px 0 0;
-  font-size: 12px;
-  color: #64748b;
-}
-
-.file-preview pre {
-  white-space: pre-wrap;
-  background: white;
-  padding: 13px;
-  border-radius: 16px;
-  font-family: monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.simple-file-manager {
-  grid-template-columns: 180px 1fr;
 }
 
 .folder-create-box {
@@ -834,7 +596,7 @@ button {
   padding: 10px;
   border: none;
   border-radius: 12px;
-  background: #2563eb;
+  background: var(--accent-color, #2563eb);
   color: white;
 }
 
@@ -848,6 +610,11 @@ button {
 
 .folder-row button:first-child {
   flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 14px;
+  text-align: left;
+  background: transparent;
 }
 
 .folder-row.active-folder {
@@ -858,8 +625,23 @@ button {
   width: 30px !important;
   height: 30px;
   padding: 0 !important;
+  border: none;
+  border-radius: 10px;
   background: #ef4444 !important;
   color: white;
+}
+
+.file-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.file-toolbar p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #64748b;
 }
 
 .file-create-panel {
@@ -876,6 +658,12 @@ button {
   resize: vertical;
 }
 
+.file-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
 .file-row {
   display: flex;
   align-items: center;
@@ -884,7 +672,6 @@ button {
   padding: 13px;
   background: white;
   border-radius: 16px;
-  margin-bottom: 10px;
 }
 
 .file-row small {
@@ -911,6 +698,8 @@ button {
   border-radius: 16px;
   color: #64748b;
 }
+
+/* CALCULATOR */
 
 .simple-calculator {
   width: 280px;
@@ -975,4 +764,110 @@ button {
 
 .equal-key {
   background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+}
+
+/* SETTINGS */
+
+.settings-app {
+  height: 100%;
+  overflow: auto;
+  color: #0f172a;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.settings-header h2,
+.settings-header p {
+  margin: 0;
+}
+
+.settings-header p {
+  margin-top: 4px;
+  color: #64748b;
+}
+
+.settings-header button {
+  border: none;
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: #ef4444;
+  color: white;
+}
+
+.settings-section {
+  margin-bottom: 18px;
+}
+
+.settings-section h3 {
+  margin: 0 0 10px;
+}
+
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 11px;
+}
+
+.wallpaper-card {
+  height: 90px;
+  border: 2px solid transparent;
+  border-radius: 18px;
+}
+
+.selected-wallpaper {
+  border-color: var(--accent-color, #2563eb);
+}
+
+.accent-row {
+  display: flex;
+  gap: 12px;
+}
+
+.accent-dot {
+  width: 42px;
+  height: 42px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+}
+
+.active-accent {
+  border-color: #0f172a;
+}
+
+.settings-preview {
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.settings-preview h3 {
+  margin: 0 0 10px;
+}
+
+.preview-box {
+  min-height: 110px;
+  border: 2px solid;
+  border-radius: 18px;
+  padding: 14px;
+  color: white;
+}
+
+.preview-box button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: white;
+}
+
+.upload-btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent-color, #2563eb);
+  color: white;
 }
